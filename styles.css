@@ -1,0 +1,85 @@
+/* 顶部标题样式 */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+/* 图片网格布局 */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.image-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* 底部按钮栏样式 */
+.navbar-bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.navbar-bottom button {
+    background: none;
+    border: none;
+    color: gray;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.navbar-bottom button.active {
+    color: lightblue;
+}
+
+/* 水印设置弹窗样式 */
+#watermark-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#watermark-modal h3 {
+    margin-top: 0;
+}
+
+#watermark-modal label {
+    display: block;
+    margin-top: 10px;
+}
+
+#watermark-modal input[type="range"] {
+    width: 100%;
+}
+
+#watermark-modal button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+}

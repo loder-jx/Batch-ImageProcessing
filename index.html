@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片批量编辑</title>
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- 引入JS库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>图片批量编辑</h1>
+</header>
+
+<main id="main-container">
+    <input type="file" id="image-input" accept="image/*" multiple>
+    <div class="image-grid" id="image-grid"></div>
+</main>
+
+<div class="navbar-bottom">
+    <button class="btn-default" id="rotate-button">
+        <span class="icon">↻</span>
+        <span>旋转</span>
+    </button>
+    <button class="btn-default" id="mirror-button">
+        <span class="icon">⇆</span>
+        <span>镜像</span>
+    </button>
+    <button class="btn-default" id="rotate-mirror-button">
+        <span class="icon">↔️</span>
+        <span>旋转镜像</span>
+    </button>
+    <button class="btn-default" id="watermark-button">
+        <span class="icon">💧</span>
+        <span>水印</span>
+    </button>
+    <button class="btn-save" id="save-button">
+        <span class="icon">💾</span>
+        <span>保存图片</span>
+    </button>
+    <button class="btn-clear" id="clear-button">
+        <span class="icon">🗑️</span>
+        <span>清空</span>
+    </button>
+</div>
+
+<!-- 水印设置弹窗 -->
+<div id="watermark-modal">
+    <h3>水印设置</h3>
+    <a href="https://github.com/joyqi/sfz">Github地址</a>
+    <label for="text">输入需要打水印的文字</label>
+    <input type="text" id="text" value="经供参考" autocomplete="off" maxlength="30">
+    <label for="color">颜色</label>
+    <input type="color" id="color" pattern="#[0-9A-Fa-f]{6}" autocomplete="off" value="#ffffff">
+    <label for="alpha">透明度</label>
+    <input type="range" id="alpha" min="0" max="1" step="0.05" autocomplete="off" value="0.15">
+    <label for="angle">角度</label>
+    <input type="range" id="angle" min="-90" max="90" step="3" autocomplete="off" value="45">
+    <label for="space">间隔</label>
+    <input type="range" id="space" min="1" max="8" step="0.2" autocomplete="off" value="2">
+    <label for="size">字号</label>
+    <input type="range" id="size" min="0.5" max="3" step="0.05" autocomplete="off" value="1">
+    <button id="apply-watermark">应用水印</button>
+    <button id="close-modal">关闭</button>
+</div>
+
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
