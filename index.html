@@ -46,6 +46,10 @@
         <span class="icon">🗑️</span>
         <span>清空</span>
     </button>
+    <button class="btn-default" id="other-tools-button">
+        <span class="icon">🛠️</span>
+        <span>其他工具</span>
+    </button>
 </div>
 
 <!-- 水印设置弹窗 -->
@@ -67,7 +71,19 @@
     <button id="apply-watermark">应用水印</button>
     <button id="close-modal">关闭</button>
 </div>
-
+<div id="other-tools-modal" class="modal">
+    <div class="modal-content">
+        <h3>其他工具</h3>
+        <button id="qr-merge-tool-button">
+            <span class="icon">🔗</span>
+            <span>二维码合并工具</span>
+        </button>
+        <button id="close-other-tools-modal">
+            <span class="icon">❌</span>
+            <span>关闭</span>
+        </button>
+    </div>
+</div>
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 <script src="script.js"></script>
 </body>
