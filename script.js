@@ -52,6 +52,16 @@ document.getElementById('mirror-button').addEventListener('click', mirrorImages)
 document.getElementById('rotate-mirror-button').addEventListener('click', rotateMirrorImages);
 document.getElementById('save-button').addEventListener('click', saveImages);
 document.getElementById('clear-button').addEventListener('click', clearImages);
+document.getElementById('other-tools-button').addEventListener('click', () => {
+    document.getElementById('other-tools-modal').style.display = 'flex';
+});
+// 绑定“二维码合并工具”按钮事件
+document.getElementById('qr-merge-tool-button').addEventListener('click', () => {
+    window.location.href = 'https://image.iclass30.cloud/QRMerge.html';
+});
+document.getElementById('close-other-tools-modal').addEventListener('click', () => {
+    document.getElementById('other-tools-modal').style.display = 'none';
+});
 
 // 旋转图片
 function rotateImages() {
