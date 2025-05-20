@@ -59,6 +59,9 @@ document.getElementById('other-tools-button').addEventListener('click', () => {
 document.getElementById('qr-merge-tool-button').addEventListener('click', () => {
     window.location.href = 'https://image.iclass30.cloud/QRMerge.html';
 });
+document.getElementById('image-to-ppt-button').addEventListener('click', () => {
+    window.location.href = 'https://image.iclass30.cloud/image-to-ppt.html';
+});
 document.getElementById('close-other-tools-modal').addEventListener('click', () => {
     document.getElementById('other-tools-modal').style.display = 'none';
 });
