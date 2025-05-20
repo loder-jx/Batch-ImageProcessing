@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片合成PPT工具</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jszip/3.10.1/jszip.js"></script>
+    <script src="pptxgen.bundle.js"></script>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-area:hover {
+            background-color: #f0f8ff;
+        }
+        #fileInput {
+            display: none;
+        }
+        #preview {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .image-preview {
+            width: 150px;
+            height: 100px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        progress {
+            width: 100%;
+            height: 20px;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>图片合成PPT工具</h1>
+        
+        <div class="instructions">
+            <p><strong>使用说明：</strong></p>
+            <p>1. 点击下方区域上传多张图片</p>
+            <p>2. 图片将按照文件名自动排序</p>
+            <p>3. 点击"生成PPT"按钮创建PPT文件</p>
+            <p>4. 下载生成的PPT文件</p>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <p>点击或拖拽图片到此处上传</p>
+            <p><small>支持PNG, JPG, JPEG格式</small></p>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+        </div>
+        
+        <div id="preview"></div>
+        
+        <button id="generateBtn" disabled>生成PPT</button>
+        
+        <div class="progress-container" id="progressContainer">
+            <p>正在生成PPT...</p>
+            <progress id="progressBar" value="0" max="100"></progress>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const preview = document.getElementById('preview');
+            const generateBtn = document.getElementById('generateBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            
+            let images = [];
+            
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.backgroundColor = '#f0f8ff';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.style.backgroundColor = '';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    handleFiles(fileInput.files);
+                }
+            });
+            
+            function handleFiles(files) {
+                images = [];
+                preview.innerHTML = '';
+                
+                // 过滤出图片文件
+                const imageFiles = Array.from(files).filter(file => 
+                    file.type.startsWith('image/')
+                );
+                
+                if (imageFiles.length === 0) {
+                    alert('请上传图片文件（PNG/JPG/JPEG）');
+                    return;
+                }
+                
+                imageFiles.sort((a, b) => a.name.localeCompare(b.name));
+                
+                // 显示预览
+                imageFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'image-preview';
+                        img.title = file.name;
+                        preview.appendChild(img);
+                        
+                        images.push({
+                            name: file.name,
+                            data: e.target.result
+                        });
+                        
+                        // 当所有图片加载完成后启用生成按钮
+                        if (images.length === imageFiles.length) {
+                            generateBtn.disabled = false;
+                        }
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            // 生成PPT
+            generateBtn.addEventListener('click', function() {
+                if (images.length === 0) {
+                    alert('请先上传图片');
+                    return;
+                }
+                
+                progressContainer.style.display = 'block';
+                progressBar.value = 0;
+                
+                const pptx = new PptxGenJS();
+                
+                pptx.title = "image-to-ppt";
+                pptx.author = "image-to-ppt";
+                
+                // 设置幻灯片大小为16:9（可根据需要调整）
+                pptx.layout = "LAYOUT_16x9";
+                
+                // 分批处理图片以避免界面冻结
+                const batchSize = 5;
+                let processed = 0;
+                
+                function processBatch(startIndex) {
+                    const endIndex = Math.min(startIndex + batchSize, images.length);
+                    
+                    for (let i = startIndex; i < endIndex; i++) {
+                        const slide = pptx.addSlide();
+                        
+                        // 添加图片到幻灯片 - 完全覆盖整个幻灯片
+                        slide.addImage({
+                            data: images[i].data,
+                            x: 0,
+                            y: 0,
+                            w: '100%',
+                            h: '100%',
+                            sizing: {
+                                type: 'cover',
+                                w: '100%',
+                                h: '100%'
+                            }
+                        });
+                        
+                        slide.notes = images[i].name;
+                        
+                        processed++;
+                        progressBar.value = (processed / images.length) * 100;
+                    }
+                    
+                    if (endIndex < images.length) {
+                        // 使用setTimeout让UI有机会更新
+                        setTimeout(() => processBatch(endIndex), 0);
+                    } else {
+                        generatePPT(pptx);
+                    }
+                }
+                
+                processBatch(0);
+            });
+            
+            function generatePPT(pptx) {
+                pptx.writeFile({ fileName: '图片演示.pptx' })
+                    .then(() => {
+                        progressContainer.style.display = 'none';
+                    })
+                    .catch(err => {
+                        console.error('生成PPT时出错:', err);
+                        alert('生成PPT时出错: ' + err.message);
+                        progressContainer.style.display = 'none';
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
